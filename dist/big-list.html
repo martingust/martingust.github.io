@@ -1,49 +1,7 @@
 <template>
 
-  <style>
-    * { box-sizing: border-box; }
-    ul, li { list-style-type: none; padding: 0; margin: 0; }
-
-    h1 { font-size: 1.2em; }
-
-    #infinite-list {
-      width: 300px;
-      border: 1px solid #ccc;
-      margin: 1em;
-      position: relative;
-    }
-
-    #infinite-list .scroll-view {
-      overflow-y: scroll;
-      height: -webkit-calc(20em + 2px);
-    }
-
-    #infinite-list ul {
-      position: absolute;
-      top: 0;
-      width: -webkit-calc(100% - 16px);
-    }
-
-    #infinite-list li {
-      height: 2em;
-      line-height: 2em;
-      padding-left: 1em;
-      border-bottom: 1px solid #ccc;
-    }
-
-    #infinite-list li:last-child {
-      border-bottom: none;
-    }
-
-    #infinite-list .scroll-view .spacer {
-      height: -webkit-calc(2em * 1000);
-    }
-  </style>
-
   <section>
     <h2>Big List</h2>
-
-    <virtual-list></virtual-list>
 
     <div id="infinite-list">
       <div class="scroll-view">
