@@ -53,7 +53,7 @@ ul, li { list-style-type: none; padding: 0; margin: 0; }
 
 h1 { font-size: 1.2em; }
 
-#infinite-list {
+#scroll-list {
   width: 300px;
   border: 1px solid #ccc;
   margin: 1em;
@@ -61,29 +61,57 @@ h1 { font-size: 1.2em; }
   overflow:hidden;
 }
 
-#infinite-list .scroll-view {
+#scroll-list .scroll-view {
   overflow-y: scroll;
-  height: -webkit-calc(20em + 2px);
+  height: calc(20em + 2px);
 }
 
-#infinite-list ul {
+#scroll-list ul {
   position: absolute;
   top: 0;
-  width: -webkit-calc(100% - 16px);
+  width: calc(100% - 16px);
 }
 
-#infinite-list li {
+#scroll-list li {
   height: 2em;
   line-height: 2em;
   padding-left: 1em;
   border-bottom: 1px solid #ccc;
 }
 
-#infinite-list li:last-child {
+#scroll-list li:last-child {
   border-bottom: none;
 }
 
-#infinite-list .scroll-view .spacer {
-  height: -webkit-calc(2em * 1000);
+#scroll-list .scroll-view .spacer {
+  height: calc(2em * 1000000);
 }
 
+#standard-list {
+  width: 300px;
+  border: 1px solid #ccc;
+  margin: 1em;
+  position: relative;
+  overflow:hidden;
+}
+
+#standard-list .scroll-view {
+  overflow-y: scroll;
+  height: calc(20em + 2px);
+}
+
+#standard-list ul {
+  top: 0;
+  width: calc(100% - 16px);
+}
+
+#standard-list li {
+  height: 2em;
+  line-height: 2em;
+  padding-left: 1em;
+  border-bottom: 1px solid #ccc;
+}
+
+#standard-list li:last-child {
+  border-bottom: none;
+}

@@ -3,12 +3,27 @@
   <section>
     <h2>Big List</h2>
 
-    <div id="infinite-list">
-      <div class="scroll-view">
-      <ul>
-        <li virtual-repeat.for="item of items">${item}</li>
-      </ul>
-      <div class="spacer"></div>
+    <div class="row">
+      <div class="col-md-4">
+        <h3>Virtual Repeat - 1 000 000 items</h3>
+        <div id="scroll-list">
+          <div class="scroll-view">
+            <ul>
+              <li virtual-repeat.for="item of items">${item}</li>
+            </ul>
+            <div class="spacer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h3>Repeat - 1 000 items</h3>
+        <div id="standard-list">
+          <div class="scroll-view">
+            <ul>
+              <li repeat.for="item of repeatItems">${item}</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
 
