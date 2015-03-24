@@ -88,8 +88,13 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               this.previous = current;
               var first = Math.ceil(current / this.itemHeight);
               for (i = 0; i < 10; ++i) {
-                this.listItems[i].innerText = items[first++];
+                //this.listItems[i].innerText = items[first++];
+                var view = viewSlot.removeAt(i);
+                //var view = this.viewSlot.children[i];
+                view.executionContext.item = items[first++];
+                this.viewSlot.insert(i, view);
               }
+
               requestAnimationFrame(function () {
                 return _this.update();
               });

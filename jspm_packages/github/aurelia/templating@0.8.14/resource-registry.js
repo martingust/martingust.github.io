@@ -7,7 +7,7 @@ System.register(["aurelia-path"], function (_export) {
     }
 
     var existing = lookup[name];
-    if (existing && name !== "e") {
+    if (existing) {
       if (existing != resource) {
         throw new Error("Attempted to register " + type + " when one with the same name already exists. Name: " + name + ".");
       }

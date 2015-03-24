@@ -27,5 +27,19 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Virtual Repeat - 1 000 000 objects</h3>
+        <div id="scroll-list">
+          <div class="scroll-view">
+            <ul>
+              <li virtual-repeat.for="item of objectArray">${item.firstName} ${item.lastName}</li>
+            </ul>
+            <div class="spacer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </section>
 </template>
