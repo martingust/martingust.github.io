@@ -1,0 +1,356 @@
+System.register(["./content-selector", "./animator"], function (_export) {
+  var ContentSelector, Animator, _createClass, _classCallCheck, ViewSlot;
+
+  return {
+    setters: [function (_contentSelector) {
+      ContentSelector = _contentSelector.ContentSelector;
+    }, function (_animator) {
+      Animator = _animator.Animator;
+    }],
+    execute: function () {
+      "use strict";
+
+      _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
+      ViewSlot = _export("ViewSlot", (function () {
+        function ViewSlot(anchor, anchorIsContainer, executionContext) {
+          var animator = arguments[3] === undefined ? Animator.instance : arguments[3];
+
+          _classCallCheck(this, ViewSlot);
+
+          this.anchor = anchor;
+          this.viewAddMethod = anchorIsContainer ? "appendNodesTo" : "insertNodesBefore";
+          this.executionContext = executionContext;
+          this.animator = animator;
+          this.children = [];
+          this.isBound = false;
+          this.isAttached = false;
+          anchor.viewSlot = this;
+        }
+
+        _createClass(ViewSlot, {
+          transformChildNodesIntoView: {
+            value: function transformChildNodesIntoView() {
+              var parent = this.anchor;
+
+              this.children.push({
+                fragment: parent,
+                firstChild: parent.firstChild,
+                lastChild: parent.lastChild,
+                removeNodes: function removeNodes() {
+                  var last;
+
+                  while (last = parent.lastChild) {
+                    parent.removeChild(last);
+                  }
+                },
+                created: function created() {},
+                bind: function bind() {},
+                unbind: function unbind() {},
+                attached: function attached() {},
+                detached: function detached() {}
+              });
+            }
+          },
+          bind: {
+            value: function bind(executionContext) {
+              var i, ii, children;
+
+              if (this.isBound) {
+                if (this.executionContext === executionContext) {
+                  return;
+                }
+
+                this.unbind();
+              }
+
+              this.isBound = true;
+              this.executionContext = executionContext = executionContext || this.executionContext;
+
+              children = this.children;
+              for (i = 0, ii = children.length; i < ii; ++i) {
+                children[i].bind(executionContext, true);
+              }
+            }
+          },
+          unbind: {
+            value: function unbind() {
+              var i,
+                  ii,
+                  children = this.children;
+              this.isBound = false;
+
+              for (i = 0, ii = children.length; i < ii; ++i) {
+                children[i].unbind();
+              }
+            }
+          },
+          add: {
+            value: function add(view) {
+              view[this.viewAddMethod](this.anchor);
+              this.children.push(view);
+
+              if (this.isAttached) {
+                view.attached();
+                // Animate page itself
+                var element = view.firstChild.nextElementSibling;
+                if (view.firstChild.nodeType === 8 && element !== undefined && element.nodeType === 1 && element.classList.contains("au-animate")) {
+                  this.animator.enter(element);
+                }
+              }
+            }
+          },
+          insert: {
+            value: function insert(index, view) {
+              if (index === 0 && !this.children.length || index >= this.children.length) {
+                this.add(view);
+              } else {
+                view.insertNodesBefore(this.children[index].firstChild);
+                this.children.splice(index, 0, view);
+
+                if (this.isAttached) {
+                  view.attached();
+                }
+              }
+            }
+          },
+          remove: {
+            value: function remove(view) {
+              view.removeNodes();
+
+              this.children.splice(this.children.indexOf(view), 1);
+
+              if (this.isAttached) {
+                view.detached();
+              }
+            }
+          },
+          removeAt: {
+            value: function removeAt(index) {
+              var _this = this;
+
+              var view = this.children[index];
+
+              var removeAction = function () {
+                view.removeNodes();
+                _this.children.splice(index, 1);
+
+                if (_this.isAttached) {
+                  view.detached();
+                }
+
+                return view;
+              };
+
+              var element = view.firstChild.nextElementSibling;
+              if (view.firstChild.nodeType === 8 && element !== undefined && element.nodeType === 1 && element.classList.contains("au-animate")) {
+                return this.animator.leave(element).then(function () {
+                  return removeAction();
+                });
+              } else {
+                return removeAction();
+              }
+            }
+          },
+          removeAll: {
+            value: function removeAll() {
+              var _this = this;
+
+              var children = this.children,
+                  ii = children.length,
+                  i;
+
+              var rmPromises = [];
+
+              children.forEach(function (child) {
+                var element = child.firstChild.nextElementSibling;
+                if (child.firstChild !== undefined && child.firstChild.nodeType === 8 && element !== undefined && element.nodeType === 1 && element.classList.contains("au-animate")) {
+                  rmPromises.push(_this.animator.leave(element).then(function () {
+                    child.removeNodes();
+                  }));
+                } else {
+                  child.removeNodes();
+                }
+              });
+
+              var removeAction = function () {
+                if (_this.isAttached) {
+                  for (i = 0; i < ii; ++i) {
+                    children[i].detached();
+                  }
+                }
+
+                _this.children = [];
+              };
+
+              if (rmPromises.length > 0) {
+                return Promise.all(rmPromises).then(function () {
+                  removeAction();
+                });
+              } else {
+                removeAction();
+              }
+            }
+          },
+          swap: {
+            value: function swap(view) {
+              var _this = this;
+
+              var removeResponse = this.removeAll();
+              if (removeResponse !== undefined) {
+                removeResponse.then(function () {
+                  _this.add(view);
+                });
+              } else {
+                this.add(view);
+              }
+            }
+          },
+          attached: {
+            value: function attached() {
+              var i, ii, children;
+
+              if (this.isAttached) {
+                return;
+              }
+
+              this.isAttached = true;
+
+              children = this.children;
+              for (i = 0, ii = children.length; i < ii; ++i) {
+                children[i].attached();
+
+                var element = children[i].firstChild.nextElementSibling;
+                if (children[i].firstChild.nodeType === 8 && element !== undefined && element.nodeType === 1 && element.classList.contains("au-animate")) {
+                  this.animator.enter(element);
+                }
+              }
+            }
+          },
+          detached: {
+            value: function detached() {
+              var i, ii, children;
+
+              if (this.isAttached) {
+                this.isAttached = false;
+                children = this.children;
+                for (i = 0, ii = children.length; i < ii; ++i) {
+                  children[i].detached();
+                }
+              }
+            }
+          },
+          installContentSelectors: {
+            value: function installContentSelectors(contentSelectors) {
+              this.contentSelectors = contentSelectors;
+              this.add = this.contentSelectorAdd;
+              this.insert = this.contentSelectorInsert;
+              this.remove = this.contentSelectorRemove;
+              this.removeAt = this.contentSelectorRemoveAt;
+              this.removeAll = this.contentSelectorRemoveAll;
+            }
+          },
+          contentSelectorAdd: {
+            value: function contentSelectorAdd(view) {
+              ContentSelector.applySelectors(view, this.contentSelectors, function (contentSelector, group) {
+                return contentSelector.add(group);
+              });
+
+              this.children.push(view);
+
+              if (this.isAttached) {
+                view.attached();
+              }
+            }
+          },
+          contentSelectorInsert: {
+            value: function contentSelectorInsert(index, view) {
+              if (index === 0 && !this.children.length || index >= this.children.length) {
+                this.add(view);
+              } else {
+                ContentSelector.applySelectors(view, this.contentSelectors, function (contentSelector, group) {
+                  return contentSelector.insert(index, group);
+                });
+
+                this.children.splice(index, 0, view);
+
+                if (this.isAttached) {
+                  view.attached();
+                }
+              }
+            }
+          },
+          contentSelectorRemove: {
+            value: function contentSelectorRemove(view) {
+              var index = this.children.indexOf(view),
+                  contentSelectors = this.contentSelectors,
+                  i,
+                  ii;
+
+              for (i = 0, ii = contentSelectors.length; i < ii; ++i) {
+                contentSelectors[i].removeAt(index, view.fragment);
+              }
+
+              this.children.splice(index, 1);
+
+              if (this.isAttached) {
+                view.detached();
+              }
+            }
+          },
+          contentSelectorRemoveAt: {
+            value: function contentSelectorRemoveAt(index) {
+              var view = this.children[index],
+                  contentSelectors = this.contentSelectors,
+                  i,
+                  ii;
+
+              for (i = 0, ii = contentSelectors.length; i < ii; ++i) {
+                contentSelectors[i].removeAt(index, view.fragment);
+              }
+
+              this.children.splice(index, 1);
+
+              if (this.isAttached) {
+                view.detached();
+              }
+
+              return view;
+            }
+          },
+          contentSelectorRemoveAll: {
+            value: function contentSelectorRemoveAll() {
+              var children = this.children,
+                  contentSelectors = this.contentSelectors,
+                  ii = children.length,
+                  jj = contentSelectors.length,
+                  i,
+                  j,
+                  view;
+
+              for (i = 0; i < ii; ++i) {
+                view = children[i];
+
+                for (j = 0; j < jj; ++j) {
+                  contentSelectors[j].removeAt(i, view.fragment);
+                }
+              }
+
+              if (this.isAttached) {
+                for (i = 0; i < ii; ++i) {
+                  children[i].detached();
+                }
+              }
+
+              this.children = [];
+            }
+          }
+        });
+
+        return ViewSlot;
+      })());
+    }
+  };
+});
