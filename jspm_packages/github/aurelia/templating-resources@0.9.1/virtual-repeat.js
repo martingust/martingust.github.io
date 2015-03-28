@@ -27,8 +27,6 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
           this.viewSlot = viewSlot;
           this.observerLocator = observerLocator;
           this.local = "item";
-          this.previous = 0;
-
           this.touchMult = 2;
           this.firefoxMult = 15;
           this.keyStep = 120;
@@ -219,34 +217,44 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               if (this.hasWheelEvent) element.addEventListener("wheel", function (e) {
                 return _this.onWheel(e);
               });
-              if (this.hasMouseWheelEvent) element.addEventListener("mousewheel", function () {
-                return _this.onMouseWheel();
+              if (this.hasMouseWheelEvent) element.addEventListener("mousewheel", function (e) {
+                return _this.onMouseWheel(e);
               });
 
               if (this.hasTouch) {
-                element.addEventListener("touchstart", this.onTouchStart);
-                element.addEventListener("touchmove", this.onTouchMove);
+                element.addEventListener("touchstart", function (e) {
+                  return _this.onTouchStart(e);
+                });
+                element.addEventListener("touchmove", function (e) {
+                  return _this.onTouchMove(e);
+                });
               }
 
               if (this.hasPointer && this.hasTouchWin) {
                 this.bodyTouchAction = document.body.style.msTouchAction;
                 element.body.style.msTouchAction = "none";
-                element.addEventListener("MSPointerDown", this.onTouchStart, true);
-                element.addEventListener("MSPointerMove", this.onTouchMove, true);
+                element.addEventListener("MSPointerDown", function (e) {
+                  return _this.onTouchStart(e);
+                }, true);
+                element.addEventListener("MSPointerMove", function (e) {
+                  return _this.onTouchMove(e);
+                }, true);
               }
 
               if (this.hasKeyDown) {
-                element.addEventListener("keydown", this.onKeyDown);
+                element.addEventListener("keydown", function (e) {
+                  return _this.onKeyDown(e);
+                }, false);
               }
 
               this.initialized = true;
             }
           },
           notify: {
-            value: function notify(element) {
+            value: function notify(event) {
               this.event.x += this.event.deltaX;
               this.event.y += this.event.deltaY;
-              this.event.originalEvent = element;
+              this.event.originalEvent = event;
 
               for (var i = 0; i < this.numListeners; i++) {
                 this.listeners[i](this.event);
@@ -254,11 +262,11 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
             }
           },
           onWheel: {
-            value: function onWheel(element) {
-              this.event.deltaX = element.wheelDeltaX || element.deltaX * -1;
-              this.event.deltaY = element.wheelDeltaY || element.deltaY * -1;
+            value: function onWheel(event) {
+              this.event.deltaX = event.wheelDeltaX || event.deltaX * -1;
+              this.event.deltaY = event.wheelDeltaY || event.deltaY * -1;
 
-              if (this.isFirefox && element.deltaMode == 1) {
+              if (this.isFirefox && event.deltaMode == 1) {
                 this.event.deltaX *= this.firefoxMult;
                 this.event.deltaY *= this.firefoxMult;
               }
@@ -266,27 +274,27 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               this.event.deltaX *= this.mouseMult;
               this.event.deltaY *= this.mouseMult;
 
-              this.notify(element);
+              this.notify(event);
             }
           },
           onMouseWheel: {
-            value: function onMouseWheel(element) {
-              this.event.deltaX = element.wheelDeltaX ? element.wheelDeltaX : 0;
-              this.event.deltaY = element.wheelDeltaY ? element.wheelDeltaY : element.wheelDelta;
+            value: function onMouseWheel(event) {
+              this.event.deltaX = event.wheelDeltaX ? event.wheelDeltaX : 0;
+              this.event.deltaY = event.wheelDeltaY ? event.wheelDeltaY : event.wheelDelta;
 
-              this.notify(element);
+              this.notify(event);
             }
           },
           onTouchStart: {
-            value: function onTouchStart(element) {
-              var t = element.targetTouches ? element.targetTouches[0] : element;
+            value: function onTouchStart(event) {
+              var t = event.targetTouches ? event.targetTouches[0] : event;
               this.touchStartX = t.pageX;
               this.touchStartY = t.pageY;
             }
           },
           onTouchMove: {
-            value: function onTouchMove(element) {
-              var t = element.targetTouches ? element.targetTouches[0] : element;
+            value: function onTouchMove(event) {
+              var t = event.targetTouches ? event.targetTouches[0] : event;
 
               this.event.deltaX = (t.pageX - this.touchStartX) * this.touchMult;
               this.event.deltaY = (t.pageY - this.touchStartY) * this.touchMult;
@@ -294,28 +302,28 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               this.thistouchStartX = t.pageX;
               this.thistouchStartY = t.pageY;
 
-              this.notify(e);
+              this.notify(event);
             }
           },
           onKeyDown: {
-            value: function onKeyDown(e) {
+            value: function onKeyDown(event) {
               this.event.deltaX = this.event.deltaY = 0;
-              switch (e.keyCode) {
+              switch (event.keyCode) {
                 case 37:
-                  this.event.deltaX = -keyStep;
+                  this.event.deltaX = -this.keyStep;
                   break;
                 case 39:
-                  this.event.deltaX = keyStep;
+                  this.event.deltaX = this.keyStep;
                   break;
                 case 38:
-                  this.event.deltaY = keyStep;
+                  this.event.deltaY = this.keyStep;
                   break;
                 case 40:
-                  this.event.deltaY = -keyStep;
+                  this.event.deltaY = -this.keyStep;
                   break;
               }
 
-              this.notify(e);
+              this.notify(event);
             }
           }
         }, {
