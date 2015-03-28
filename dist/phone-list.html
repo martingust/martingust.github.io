@@ -1,0 +1,29 @@
+<template>
+    <h2>Contacts</h2>
+
+    <div class="row contacts">
+      <div class="col-md-12">
+        <h3>Virtual Repeat - 1 000 000 contacts</h3>
+
+        <div id="scroll-view" class="scroll-view contact-list">
+          <section>
+            <div virtual-repeat.for="item of objectArray" class="contact-list-item">
+              <div class="contact-item">
+                <img src="${item.image}" />
+                <div class="name">
+                  ${item.name}
+                </div>
+                <div class="content">
+                  <strong>Email:</strong> ${item.email} <br />
+                  <strong>Phone:</strong> ${item.phone} <br />
+                  <strong>Country:</strong> ${item.country} <br />
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+      </div>
+    </div>
+
+</template>

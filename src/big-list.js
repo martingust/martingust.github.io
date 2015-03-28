@@ -6,10 +6,10 @@ export class BigList{
     this.objectArray = [];
     this.numberOfItems = 1000000;
     this.numberOfRepeatItems = 1000;
+    console.log(this);
   }
 
   activate(){
-    // Randomly create a bunch of test data.
     var firstNames = ['Shuhel', 'Ashley', 'Mike', 'Matthew', 'Rob', 'Jeremy', 'Martin', 'Patrick', 'Scott', 'Timothy', 'Vildan', 'Scott'];
     var lastNames = ['Ahmed', 'Grant', 'Graham', 'James', 'Eisenberg', 'Van der Haegen', 'Danyow', 'Gustafsson', 'Walters', 'Criswell', 'Moran', 'Softic', 'Allan'];
 

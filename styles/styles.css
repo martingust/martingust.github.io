@@ -45,73 +45,52 @@ section {
     max-width: 425px;
 }
 
-/* virtual lit */
+.scroll-view {
+  border: 10px solid #333;
+  overflow: hidden;
+}
 
-
- * { box-sizing: border-box; }
-ul, li { list-style-type: none; padding: 0; margin: 0; }
-
-h1 { font-size: 1.2em; }
-
-#scroll-list {
-  width: 300px;
-  border: 1px solid #ccc;
-  margin: 1em;
+section div {
   position: relative;
-  overflow:hidden;
 }
 
-#scroll-list .scroll-view {
-  overflow-y: scroll;
-  height: calc(20em + 2px);
+.simple-item {
+  height: 40px;
+  width: 100%;
+  line-height: 40px;
+  color: #000;
 }
 
-#scroll-list ul {
-  position: absolute;
-  top: 0;
-  width: calc(100% - 16px);
+.row.contacts {
+
 }
 
-#scroll-list li {
-  height: 2em;
-  line-height: 2em;
-  padding-left: 1em;
-  border-bottom: 1px solid #ccc;
+.contact-list {
+  width: 100%;
+  background-color: #2e6da4;
+  color: #000;
+}
+.contact-list-item {
+  width:100%;
 }
 
-#scroll-list li:last-child {
-  border-bottom: none;
+.contact-list-item .contact-item {
+  height: 148px;
+  padding: 10px;
+
 }
 
-#scroll-list .scroll-view .spacer {
-  height: calc(2em * 1000000);
+.contact-item img {
+  float: left;
+  margin-right: 10px;
 }
 
-#standard-list {
-  width: 300px;
-  border: 1px solid #ccc;
-  margin: 1em;
-  position: relative;
-  overflow:hidden;
+.contact-item .name {
+  font-size: 20px;
+  color: #fff;
 }
 
-#standard-list .scroll-view {
-  overflow-y: scroll;
-  height: calc(20em + 2px);
+.contact-item strong {
+  color: #000;
 }
 
-#standard-list ul {
-  top: 0;
-  width: calc(100% - 16px);
-}
-
-#standard-list li {
-  height: 2em;
-  line-height: 2em;
-  padding-left: 1em;
-  border-bottom: 1px solid #ccc;
-}
-
-#standard-list li:last-child {
-  border-bottom: none;
-}
