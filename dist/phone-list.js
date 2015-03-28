@@ -15,7 +15,7 @@ System.register([], function (_export) {
           _classCallCheck(this, PhoneList);
 
           this.objectArray = [];
-          this.numberOfItems = 100;
+          this.numberOfItems = 1000000;
         }
 
         _createClass(PhoneList, {
