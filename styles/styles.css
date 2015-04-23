@@ -95,3 +95,8 @@ section div {
   color: #000;
 }
 
+.virtualScrollOuter {
+  height: 600px;
+  overflow: scroll;
+}
+

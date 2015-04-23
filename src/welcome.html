@@ -1,6 +1,11 @@
 <template>
   <section>
     <h2>${heading}</h2>
+
+    <ul>
+        <li repeat.for="[id, customer] of customers">${id} ${customer.name}</li>
+    </ul>
+
     <form role="form" submit.delegate="welcome()">
       <div class="form-group">
         <label for="fn">First Name</label>

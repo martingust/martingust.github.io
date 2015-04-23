@@ -1,5 +1,5 @@
-System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-templating'], function (_export) {
-  var inject, ObserverLocator, calcSplices, getChangeRecords, BoundViewFactory, ViewSlot, customAttribute, bindable, templateController, _classCallCheck, _createClass, VirtualRepeat;
+System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-templating', './scroll-listener'], function (_export) {
+  var inject, ObserverLocator, calcSplices, getChangeRecords, BoundViewFactory, ViewSlot, customAttribute, bindable, templateController, ScrollListener, _classCallCheck, _createClass, VirtualRepeat;
 
   return {
     setters: [function (_aureliaDependencyInjection) {
@@ -14,6 +14,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
       customAttribute = _aureliaTemplating.customAttribute;
       bindable = _aureliaTemplating.bindable;
       templateController = _aureliaTemplating.templateController;
+    }, function (_scrollListener) {
+      ScrollListener = _scrollListener.ScrollListener;
     }],
     execute: function () {
       'use strict';
@@ -23,41 +25,22 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
       _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
       VirtualRepeat = (function () {
-        function VirtualRepeat(element, viewFactory, viewSlot, observerLocator) {
+        function VirtualRepeat(element, viewFactory, viewSlot, observerLocator, scrollListener) {
           _classCallCheck(this, _VirtualRepeat);
 
           this.element = element;
           this.viewFactory = viewFactory;
           this.viewSlot = viewSlot;
           this.observerLocator = observerLocator;
+          this.scrollListener = scrollListener;
           this.local = 'item';
-          this.touchMultitude = 2;
-          this.firefoxMultitude = 15;
-          this.mouseMultitude = 1;
-          this.keyStep = 120;
-          this.listeners = [];
-          this.initialized = false;
-          this.hasWheelEvent = 'onwheel' in document;
-          this.hasMouseWheelEvent = 'onmousewheel' in document;
-          this.hasTouch = 'ontouchstart' in document;
-          this.hasKeyDown = 'onkeydown' in document;
-          this.hasTouchWin = navigator.msMaxTouchPoints && navigator.msMaxTouchPoints > 1;
-          this.hasPointer = !!window.navigator.msPointerEnabled;
           this.ease = 0.1;
           this.targetY = 0;
           this.currentY = 0;
           this.previousY = 0;
           this.first = 0;
           this.previousFirst = 0;
-          this.isFirefox = navigator.userAgent.indexOf('Firefox') > -1;
           this.numberOfDomElements = 0;
-          this.event = {
-            y: 0,
-            x: 0,
-            deltaX: 0,
-            deltaY: 0,
-            originalEvent: null
-          };
         }
 
         _createClass(VirtualRepeat, [{
@@ -72,15 +55,28 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
               e.preventDefault();
             });
 
-            this.initialize(this.virtualScroll, function (target) {
-              _this.targetY += target.deltaY;
+            this.scrollListener.initialize(this.virtualScroll, function (deltaY) {
+              _this.targetY += deltaY;
               _this.targetY = Math.max(-_this.scrollViewHeight, _this.targetY);
               _this.targetY = Math.min(0, _this.targetY);
+              return _this.targetY;
             });
 
             var row = this.createFullExecutionContext(this.items[0], 0, 1);
             var view = this.viewFactory.create(row);
             this.viewSlot.add(view);
+          }
+        }, {
+          key: 'unbind',
+          value: function unbind() {
+            this.scrollListener.dispose();
+          }
+        }, {
+          key: 'scrollListener',
+          value: function scrollListener(target) {
+            this.targetY += target.deltaY;
+            this.targetY = Math.max(-this.scrollViewHeight, this.targetY);
+            this.targetY = Math.min(0, this.targetY);
           }
         }, {
           key: 'attached',
@@ -260,207 +256,21 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
                 }
               }
             }
-
             this.calculateScrollViewHeight();
-          }
-        }, {
-          key: 'handleSplicesOld',
-          value: function handleSplicesOld(items, splices) {
-            var numberOfDomElements = this.numberOfDomElements,
-                viewSlot = this.viewSlot,
-                first = this.first,
-                totalAdded = 0,
-                i,
-                ii,
-                j,
-                k,
-                view,
-                marginTop,
-                addIndex,
-                domAddIndex,
-                childIndex,
-                splice,
-                end,
-                children,
-                length,
-                spliceIndexLow;
-            this.items = items;
-
-            for (i = 0, ii = splices.length; i < ii; ++i) {
-              splice = splices[0];
-              addIndex = splices[i].index;
-              end = splice.index + splice.addedCount;
-              totalAdded += splice.addedCount;
-
-              for (; addIndex < end; ++addIndex) {
-                if (addIndex < first + numberOfDomElements) {
-                  spliceIndexLow = !spliceIndexLow ? first : spliceIndexLow;
-                  childIndex = numberOfDomElements - 1;
-                  view = viewSlot.children[childIndex];
-                  view.executionContext.item = items[addIndex];
-                  domAddIndex = addIndex - first;
-                  VirtualRepeat.moveItem(viewSlot.children, childIndex, domAddIndex);
-
-                  if (childIndex !== addIndex - first) {
-                    var node = this.virtualScrollInner.children[childIndex];
-                    this.virtualScrollInner.insertBefore(node, this.virtualScrollInner.children[domAddIndex]);
-
-                    marginTop = this.itemHeight * first + 'px';
-                    this.virtualScrollInner.style.marginTop = marginTop;
-                  }
-                }
-              }
-            }
-
-            this.calculateScrollViewHeight();
-
-            children = viewSlot.children;
-            length = children.length;
-            for (j = 0; j < length; j++) {
-              this.updateExecutionContext(children[j].executionContext, children[j].executionContext.$index + totalAdded, length);
-            }
           }
         }, {
           key: 'calculateScrollViewHeight',
           value: function calculateScrollViewHeight() {
             this.scrollViewHeight = this.items.length * this.itemHeight - (this.numberOfDomElements - 1) * this.itemHeight + 1 * this.itemHeight;
           }
-        }, {
-          key: 'initialize',
-          value: function initialize(element, listener) {
-            if (!this.initialized) {
-              this.initListeners(element);
-            }
-            this.listeners.push(listener);
-          }
-        }, {
-          key: 'initListeners',
-          value: function initListeners(element) {
-            var _this4 = this;
-
-            if (this.hasWheelEvent) element.addEventListener('wheel', function (e) {
-              return _this4.onWheel(e);
-            });
-            if (this.hasMouseWheelEvent) element.addEventListener('mousewheel', function (e) {
-              return _this4.onMouseWheel(e);
-            });
-
-            if (this.hasTouch) {
-              element.addEventListener('touchstart', function (e) {
-                return _this4.onTouchStart(e);
-              });
-              element.addEventListener('touchmove', function (e) {
-                return _this4.onTouchMove(e);
-              });
-            }
-
-            if (this.hasPointer && this.hasTouchWin) {
-              this.bodyTouchAction = document.body.style.msTouchAction;
-              element.body.style.msTouchAction = 'none';
-              element.addEventListener('MSPointerDown', function (e) {
-                return _this4.onTouchStart(e);
-              }, true);
-              element.addEventListener('MSPointerMove', function (e) {
-                return _this4.onTouchMove(e);
-              }, true);
-            }
-
-            if (this.hasKeyDown) {
-              element.addEventListener('keydown', function (e) {
-                return _this4.onKeyDown(e);
-              }, false);
-            }
-
-            this.initialized = true;
-          }
-        }, {
-          key: 'notify',
-          value: function notify(event) {
-            var i, ii;
-            this.event.x += this.event.deltaX;
-            this.event.y += this.event.deltaY;
-            this.event.originalEvent = event;
-
-            for (i = 0, ii = this.listeners.length; i < ii; ++i) {
-              this.listeners[i](this.event);
-            }
-          }
-        }, {
-          key: 'onWheel',
-          value: function onWheel(event) {
-            this.event.deltaX = event.wheelDeltaX || event.deltaX * -1;
-            this.event.deltaY = event.wheelDeltaY || event.deltaY * -1;
-
-            if (this.isFirefox && event.deltaMode == 1) {
-              this.event.deltaX *= this.firefoxMultitude;
-              this.event.deltaY *= this.firefoxMultitude;
-            }
-
-            this.event.deltaX *= this.mouseMultitude;
-            this.event.deltaY *= this.mouseMultitude;
-
-            this.notify(event);
-          }
-        }, {
-          key: 'onMouseWheel',
-          value: function onMouseWheel(event) {
-            this.event.deltaX = event.wheelDeltaX ? event.wheelDeltaX : 0;
-            this.event.deltaY = event.wheelDeltaY ? event.wheelDeltaY : event.wheelDelta;
-
-            this.notify(event);
-          }
-        }, {
-          key: 'onTouchStart',
-          value: function onTouchStart(event) {
-            var t = event.targetTouches ? event.targetTouches[0] : event;
-            this.touchStartX = t.pageX;
-            this.touchStartY = t.pageY;
-          }
-        }, {
-          key: 'onTouchMove',
-          value: function onTouchMove(event) {
-            var t = event.targetTouches ? event.targetTouches[0] : event;
-
-            this.event.deltaX = (t.pageX - this.touchStartX) * this.touchMultitude;
-            this.event.deltaY = (t.pageY - this.touchStartY) * this.touchMultitude;
-
-            this.touchStartX = t.pageX;
-            this.touchStartY = t.pageY;
-
-            this.notify(event);
-          }
-        }, {
-          key: 'onKeyDown',
-          value: function onKeyDown(event) {
-            this.event.deltaX = this.event.deltaY = 0;
-            switch (event.keyCode) {
-              case 37:
-                this.event.deltaX = -this.keyStep;
-                break;
-              case 39:
-                this.event.deltaX = this.keyStep;
-                break;
-              case 38:
-                this.event.deltaY = this.keyStep;
-                break;
-              case 40:
-                this.event.deltaY = -this.keyStep;
-                break;
-            }
-
-            this.notify(event);
-          }
         }], [{
           key: 'moveItem',
           value: function moveItem(array, pos1, pos2) {
             var i, tmp;
-
             pos1 = parseInt(pos1, 10);
             pos2 = parseInt(pos2, 10);
-
             if (pos1 !== pos2 && 0 <= pos1 && pos1 <= array.length && 0 <= pos2 && pos2 <= array.length) {
               tmp = array[pos1];
-
               if (pos1 < pos2) {
                 for (i = pos1; i < pos2; i++) {
                   array[i] = array[i + 1];
@@ -470,7 +280,6 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
                   array[i] = array[i - 1];
                 }
               }
-
               array[pos2] = tmp;
             }
           }
@@ -481,7 +290,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
         VirtualRepeat = bindable('items')(VirtualRepeat) || VirtualRepeat;
         VirtualRepeat = bindable('local')(VirtualRepeat) || VirtualRepeat;
         VirtualRepeat = templateController(VirtualRepeat) || VirtualRepeat;
-        VirtualRepeat = inject(Element, BoundViewFactory, ViewSlot, ObserverLocator)(VirtualRepeat) || VirtualRepeat;
+        VirtualRepeat = inject(Element, BoundViewFactory, ViewSlot, ObserverLocator, ScrollListener)(VirtualRepeat) || VirtualRepeat;
         return VirtualRepeat;
       })();
 
