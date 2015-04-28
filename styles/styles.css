@@ -45,14 +45,6 @@ section {
   max-width: 425px;
 }
 
-.scroll-view {
-  border: 10px solid #333;
-  overflow: hidden;
-}
-
-section div {
-  position: relative;
-}
 
 .simple-item {
   height: 40px;
@@ -70,14 +62,16 @@ section div {
   background-color: #2e6da4;
   color: #000;
   height: 600px;
+  border: 10px solid #333;
 }
 .contact-list-item {
   width:100%;
+
 }
 
 .contact-list-item .contact-item {
-  height: 148px;
-  padding: 10px;
+  height: 150px;
+  padding: 0px;
 
 }
 
@@ -93,10 +87,5 @@ section div {
 
 .contact-item strong {
   color: #000;
-}
-
-.virtualScrollOuter {
-  height: 600px;
-  overflow: scroll;
 }
 

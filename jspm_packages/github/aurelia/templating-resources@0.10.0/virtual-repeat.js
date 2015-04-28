@@ -50,6 +50,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
 
             this.executionContext = executionContext;
             this.virtualScroll = this.element.parentElement.parentElement;
+            this.virtualScroll.style.overflow = 'hidden';
+            this.virtualScroll.tabIndex = '999';
             this.virtualScrollInner = this.element.parentElement;
             this.virtualScroll.addEventListener('touchmove', function (e) {
               e.preventDefault();
@@ -72,28 +74,23 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
             this.scrollListener.dispose();
           }
         }, {
-          key: 'scrollListener',
-          value: function scrollListener(target) {
-            this.targetY += target.deltaY;
-            this.targetY = Math.max(-this.scrollViewHeight, this.targetY);
-            this.targetY = Math.min(0, this.targetY);
-          }
-        }, {
           key: 'attached',
           value: function attached() {
-            var virtualScrollHeight, row, view;
-            this.listItems = this.element.parentElement.children;
-            this.itemHeight = this.listItems[0].getBoundingClientRect().height;
-            virtualScrollHeight = this.virtualScroll.getBoundingClientRect().height;
-            this.numberOfDomElements = Math.ceil(virtualScrollHeight / this.itemHeight) + 1;
+            var row, view;
+            this.listItems = this.virtualScrollInner.children;
+            this.itemHeight = VirtualRepeat.calcOuterHeight(this.listItems[0]);
+
+            this.virtualScrollHeight = this.virtualScroll.getBoundingClientRect().height;
+            this.numberOfDomElements = Math.ceil(this.virtualScrollHeight / this.itemHeight) + 1;
 
             for (var i = 1, ii = this.numberOfDomElements; i < ii; ++i) {
               row = this.createFullExecutionContext(this.items[i], i, ii);
               view = this.viewFactory.create(row);
               this.viewSlot.add(view);
+              this.virtualScrollInner.children[i].style.display = i >= this.items.length - 1 ? 'none' : 'block';
             }
 
-            this.calculateScrollViewHeight();
+            this.calcScrollViewHeight();
             this.processItems();
           }
         }, {
@@ -226,6 +223,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
                 totalAdded = 0,
                 i,
                 ii,
+                j,
                 view,
                 marginTop,
                 addIndex,
@@ -238,9 +236,6 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
               view = viewSlot.children[i];
               view.executionContext[this.local] = items[first + i];
               view.executionContext = this.updateExecutionContext(view.executionContext, first + i, items.length);
-              if (!view.executionContext[this.local]) {
-                viewSlot.removeAt(view.executionContext.$index);
-              }
             }
 
             for (i = 0, ii = splices.length; i < ii; ++i) {
@@ -256,32 +251,29 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
                 }
               }
             }
-            this.calculateScrollViewHeight();
+
+            if (items.length < numberOfDomElements) {
+              for (j = 0; j < numberOfDomElements; ++j) {
+                this.virtualScrollInner.children[j].style.display = j >= items.length - 1 ? 'none' : 'block';
+              }
+            }
+
+            this.calcScrollViewHeight();
           }
         }, {
-          key: 'calculateScrollViewHeight',
-          value: function calculateScrollViewHeight() {
-            this.scrollViewHeight = this.items.length * this.itemHeight - (this.numberOfDomElements - 1) * this.itemHeight + 1 * this.itemHeight;
+          key: 'calcScrollViewHeight',
+          value: function calcScrollViewHeight() {
+            this.scrollViewHeight = this.items.length * this.itemHeight - this.virtualScrollHeight;
           }
         }], [{
-          key: 'moveItem',
-          value: function moveItem(array, pos1, pos2) {
-            var i, tmp;
-            pos1 = parseInt(pos1, 10);
-            pos2 = parseInt(pos2, 10);
-            if (pos1 !== pos2 && 0 <= pos1 && pos1 <= array.length && 0 <= pos2 && pos2 <= array.length) {
-              tmp = array[pos1];
-              if (pos1 < pos2) {
-                for (i = pos1; i < pos2; i++) {
-                  array[i] = array[i + 1];
-                }
-              } else {
-                for (i = pos1; i > pos2; i--) {
-                  array[i] = array[i - 1];
-                }
-              }
-              array[pos2] = tmp;
-            }
+          key: 'calcOuterHeight',
+          value: function calcOuterHeight(element) {
+            var height, style;
+            height = element.getBoundingClientRect().height;
+            style = element.currentStyle || window.getComputedStyle(element);
+            height += parseInt(style.marginTop);
+            height += parseInt(style.marginBottom);
+            return height;
           }
         }]);
 

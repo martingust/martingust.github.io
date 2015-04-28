@@ -6,6 +6,10 @@ import 'bootstrap/css/bootstrap.css!';
 @inject(Router)
 export class App {
   constructor(router) {
+    this.p = {
+      selectableValues: [1, 2, 3]
+    };
+    this.selectableValues = [1, 2, 3];
     this.router = router;
     this.router.configure(config => {
       config.title = 'Aurelia';

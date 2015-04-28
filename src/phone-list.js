@@ -2,7 +2,7 @@ export class PhoneList{
 
    constructor() {
     this.objectArray = [];
-    this.numberOfItems = 20;
+    this.numberOfItems = 100;
 
   }
 

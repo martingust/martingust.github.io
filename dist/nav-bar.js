@@ -19,6 +19,7 @@ System.register(['aurelia-framework'], function (_export) {
           _classCallCheck(this, NavBar);
 
           this.router = _instanceInitializers.router.call(this);
+          this.selectableValue = _instanceInitializers.selectableValue.call(this);
         }
 
         _createDecoratedClass(NavBar, [{
@@ -27,6 +28,21 @@ System.register(['aurelia-framework'], function (_export) {
           decorators: [bindable],
           initializer: function () {
             return null;
+          }
+        }, {
+          key: 'selectableValue',
+          enumerable: true,
+          decorators: [bindable],
+          initializer: function () {
+            return null;
+          }
+        }, {
+          key: 'activate',
+          value: function activate() {}
+        }, {
+          key: 'attached',
+          value: function attached() {
+            alert(this.selectableValue);
           }
         }], null, _instanceInitializers);
 
@@ -37,4 +53,4 @@ System.register(['aurelia-framework'], function (_export) {
     }
   };
 });
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5hdi1iYXIuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijt3REFFYSxNQUFNOzs7O21DQUZYLFFBQVE7Ozs7Ozs7OztBQUVILFlBQU07OztpQkFBTixNQUFNO2dDQUFOLE1BQU07O2VBQ1AsTUFBTSx5QkFBTixNQUFNOzs7OEJBREwsTUFBTTs7O3VCQUNoQixRQUFROzttQkFBVSxJQUFJOzs7O2VBRFosTUFBTTs7O3dCQUFOLE1BQU0iLCJmaWxlIjoibmF2LWJhci5qcyIsInNvdXJjZVJvb3QiOiIvc3JjLyJ9
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5hdi1iYXIuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijt3REFFYSxNQUFNOzs7O21DQUZYLFFBQVE7Ozs7Ozs7OztBQUVILFlBQU07OztpQkFBTixNQUFNO2dDQUFOLE1BQU07O2VBQ1AsTUFBTSx5QkFBTixNQUFNO2VBQ04sZUFBZSx5QkFBZixlQUFlOzs7OEJBRmQsTUFBTTs7O3VCQUNoQixRQUFROzttQkFBVSxJQUFJOzs7Ozt1QkFDdEIsUUFBUTs7bUJBQW1CLElBQUk7Ozs7aUJBQ3hCLG9CQUFFLEVBRVQ7OztpQkFDTyxvQkFBRTtBQUNSLGlCQUFLLENBQUMsSUFBSSxDQUFDLGVBQWUsQ0FBQyxDQUFDO1dBQzdCOzs7ZUFSVSxNQUFNOzs7d0JBQU4sTUFBTSIsImZpbGUiOiJuYXYtYmFyLmpzIiwic291cmNlUm9vdCI6Ii9zcmMvIn0=

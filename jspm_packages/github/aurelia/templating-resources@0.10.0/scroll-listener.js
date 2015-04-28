@@ -123,7 +123,7 @@ System.register([], function (_export) {
             if (this.amplitude) {
               elapsed = Date.now() - this.timestamp;
               delta = this.amplitude * Math.exp(-elapsed / this.timeConstant);
-              if (delta > 0.5 || delta < -0.5) {
+              if (delta > 1 || delta < -1) {
                 this.offset = this.listener(delta);
                 requestAnimationFrame(function () {
                   return _this2.autoScroll();

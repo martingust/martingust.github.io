@@ -15,22 +15,22 @@
         <button class="btn btn-primary" click.delegate="removeItems(3)">Remove top 3</button>
         <br /><br />
 
-          <div class="scroll-view contact-list" tabindex="1">
-            <section>
-            <div virtual-repeat.for="item of objectArray" class="contact-list-item">
-              <div class="contact-item">
-                <img src="${item.image}" />
-                <div class="name">
-                 ${$index} ${item.name}
+          <div class="contact-list">
+            <div>
+              <div virtual-repeat.for="item of objectArray" class="contact-list-item">
+                <div class="contact-item">
+                  <img src="${item.image}" />
+                  <div class="name">
+                  ${$index} ${item.name}
+                  </div>
+                  <div class="content">
+                    <strong>Email:</strong> ${item.email} <br />
+                    <strong>Phone:</strong> ${item.phone} <br />
+                    <strong>Country:</strong> ${item.country} <br />
+                  </div>
                 </div>
-                <div class="content">
-                  <strong>Email:</strong> ${item.email} <br />
-                  <strong>Phone:</strong> ${item.phone} <br />
-                  <strong>Country:</strong> ${item.country} <br />
-                </div>
-              </div>
             </div>
-          </section>
+          </div>
           </div>
 
 

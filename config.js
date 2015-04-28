@@ -15,6 +15,7 @@ System.config({
     "aurelia-http-client": "github:aurelia/http-client@0.7.0",
     "aurelia-router": "github:aurelia/router@0.7.0",
     "bootstrap": "github:twbs/bootstrap@3.3.4",
+    "aurelia-templating-binding": "github:aurelia/templating-binding@0.10.0",
     "css": "github:systemjs/plugin-css@0.1.9",
     "faker.js": "github:marak/faker.js@2.1.2",
     "font-awesome": "npm:font-awesome@4.3.0",
