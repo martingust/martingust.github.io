@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  background-color: #222526 !important;
 }
 
 .splash {
@@ -50,7 +51,7 @@ section {
   height: 40px;
   width: 100%;
   line-height: 40px;
-  color: #000;
+
 }
 
 .row.contacts {
@@ -59,33 +60,53 @@ section {
 
 .contact-list {
   width: 100%;
-  background-color: #2e6da4;
-  color: #000;
-  height: 600px;
-  border: 10px solid #333;
+  background-color: #000;
+  color: #808080;
+  height: 75vh;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: 0 auto;
 }
 .contact-list-item {
-  width:100%;
+  padding-top: 10px;
 
 }
 
 .contact-list-item .contact-item {
-  height: 150px;
-  padding: 0px;
-
+  height: 121px;
+  border-bottom: 1px solid #808080;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .contact-item img {
   float: left;
   margin-right: 10px;
+  height: 100px;
 }
 
 .contact-item .name {
-  font-size: 20px;
+  font-size: 18px;
   color: #fff;
 }
 
-.contact-item strong {
-  color: #000;
+.array-actions {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.navbar-default {
+  background-color: #222526 !important;
+}
+
+.navbar-default .navbar-brand {
+  color: #fff !important;
+}
+
+.btn-primary {
+  background-color: #33B544 !important;
+  border-color: #33B544 !important;
+  text-transform: uppercase;
 }
 

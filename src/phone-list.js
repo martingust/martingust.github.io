@@ -1,6 +1,6 @@
 export class PhoneList{
 
-   constructor() {
+  constructor() {
     this.objectArray = [];
     this.numberOfItems = 100;
 
@@ -14,7 +14,7 @@ export class PhoneList{
         email: faker.internet.email(),
         phone: faker.phone.phoneNumber(),
         country: faker.address.country()
-        });
+      });
     }
   }
 
@@ -28,6 +28,8 @@ export class PhoneList{
         country: faker.address.country()
       });
     }
+
+    this.numberOfItems = this.objectArray.length;
   }
 
   addItem2(){
@@ -42,24 +44,24 @@ export class PhoneList{
   }
 
   addItem(){
-      this.objectArray.push({
-        name: faker.name.findName(),
-        image: faker.image.avatar(),
-        email: faker.internet.email(),
-        phone: faker.phone.phoneNumber(),
-        country: faker.address.country()
-      });
+    this.objectArray.push({
+      name: faker.name.findName(),
+      image: faker.image.avatar(),
+      email: faker.internet.email(),
+      phone: faker.phone.phoneNumber(),
+      country: faker.address.country()
+    });
   }
 
-    addItemFirst(){
-        this.objectArray.unshift({
-          name: faker.name.findName(),
-          image: faker.image.avatar(),
-          email: faker.internet.email(),
-          phone: faker.phone.phoneNumber(),
-          country: faker.address.country()
-        });
-    }
+  addItemFirst(){
+    this.objectArray.unshift({
+      name: faker.name.findName(),
+      image: faker.image.avatar(),
+      email: faker.internet.email(),
+      phone: faker.phone.phoneNumber(),
+      country: faker.address.country()
+    });
+  }
 
   removeItems(count){
     this.objectArray.splice(0, count);

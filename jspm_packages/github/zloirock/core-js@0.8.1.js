@@ -1,1 +1,0 @@
-module.exports = require("github:zloirock/core-js@0.8.1/index");

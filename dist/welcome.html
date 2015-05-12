@@ -1,10 +1,18 @@
 <template>
-  <section>
+  <section class="au-animate">
     <h2>${heading}</h2>
-
     <ul>
-        <li repeat.for="[id, customer] of customers">${id} ${customer.name}</li>
+        <li repeat.for="name of names">${name}</li>
     </ul>
+
+      <button click.delegate="test()">Oops</button>
+      <collapse-panel>
+          <collapse-panel if.bind="showItems">
+              <p>Here is some content ${heading} <input value.bind="heading"></input></p>
+              ${validation.result.isValid}
+              <p if.bind="showItems" repeat.for="item of items">Repeated row</p>
+          </collapse-panel>
+      </collapse-panel>
 
     <form role="form" submit.delegate="welcome()">
       <div class="form-group">
@@ -13,7 +21,7 @@
       </div>
       <div class="form-group">
         <label for="ln">Last Name</label>
-        <input type="text" value.bind="lastName" class="form-control" id="ln" placeholder="last name">
+        <input type="text" value.bind="lastName" disabled.bind="hasFocus" class="form-control" id="ln" placeholder="last name">
       </div>
       <div class="form-group">
         <label>Full Name</label>

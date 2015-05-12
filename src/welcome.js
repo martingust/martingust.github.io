@@ -1,18 +1,11 @@
-import {computedFrom} from 'aurelia-framework';
+import {computedFrom, bindable, inject, customAttribute} from 'aurelia-framework';
 
 export class Welcome{
   heading = 'Welcome to the Aurelia Navigation App!';
   firstName = 'John';
   lastName = 'Doe';
-
-  constructor(){
-    this.customers = new Map();
-  }
-
-  activate(){
-    this.customers.set(1, {name: 'Martin'});
-    this.customers.set(2, {name: 'Matilde'});
-  }
+  names = ['Martin', 'Matilde', 'Alma', 'Ronny', 'Inga-Britt', 'Mats', 'Maria'];
+  hasFocus = true;
 
   //Getters can't be observed with Object.observe, so they must be dirty checked.
   //However, if you tell Aurelia the dependencies, it no longer needs to dirty check the property.
@@ -22,8 +15,13 @@ export class Welcome{
     return `${this.firstName} ${this.lastName}`;
   }
 
+  activate(){
+    this.hasFocus = true;
+  }
+
   welcome(){
-    alert(`Welcome, ${this.fullName}!`);
+      this.names.push('Tessan');
+      //this.names.splice(0, 1);
   }
 }
 
@@ -32,3 +30,5 @@ export class UpperValueConverter {
     return value && value.toUpperCase();
   }
 }
+
+

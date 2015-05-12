@@ -1,5 +1,9 @@
 System.register(['aurelia-framework', 'aurelia-http-client'], function (_export) {
-  var inject, HttpClient, _classCallCheck, _createClass, Flickr;
+  var inject, HttpClient, Flickr;
+
+  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   return {
     setters: [function (_aureliaFramework) {
@@ -9,10 +13,6 @@ System.register(['aurelia-framework', 'aurelia-http-client'], function (_export)
     }],
     execute: function () {
       'use strict';
-
-      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
-      _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
       Flickr = (function () {
         function Flickr(http) {
@@ -25,7 +25,9 @@ System.register(['aurelia-framework', 'aurelia-http-client'], function (_export)
           this.http = http;
         }
 
-        _createClass(Flickr, [{
+        var _Flickr = Flickr;
+
+        _createClass(_Flickr, [{
           key: 'activate',
           value: function activate() {
             var _this = this;
@@ -41,7 +43,6 @@ System.register(['aurelia-framework', 'aurelia-http-client'], function (_export)
           }
         }]);
 
-        var _Flickr = Flickr;
         Flickr = inject(HttpClient)(Flickr) || Flickr;
         return Flickr;
       })();
@@ -50,4 +51,4 @@ System.register(['aurelia-framework', 'aurelia-http-client'], function (_export)
     }
   };
 });
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImZsaWNrci5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO3lEQUlhLE1BQU07Ozs7aUNBSlgsTUFBTTs7c0NBQ04sVUFBVTs7Ozs7Ozs7O0FBR0wsWUFBTTtBQUtOLGlCQUxBLE1BQU0sQ0FLTCxJQUFJLEVBQUM7OztlQUpqQixPQUFPLEdBQUcsUUFBUTtlQUNsQixNQUFNLEdBQUcsRUFBRTtlQUNYLEdBQUcsR0FBRyw2RkFBNkY7O0FBR2pHLGNBQUksQ0FBQyxJQUFJLEdBQUcsSUFBSSxDQUFDO1NBQ2xCOztxQkFQVSxNQUFNOztpQkFTVCxvQkFBRTs7O0FBQ1IsbUJBQU8sSUFBSSxDQUFDLElBQUksQ0FBQyxLQUFLLENBQUMsSUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFDLElBQUksQ0FBQyxVQUFBLFFBQVEsRUFBSTtBQUNoRCxvQkFBSyxNQUFNLEdBQUcsUUFBUSxDQUFDLE9BQU8sQ0FBQyxLQUFLLENBQUM7YUFDdEMsQ0FBQyxDQUFDO1dBQ0o7OztpQkFFWSx5QkFBRTtBQUNiLG1CQUFPLE9BQU8sQ0FBQyxpQ0FBaUMsQ0FBQyxDQUFDO1dBQ25EOzs7c0JBakJVLE1BQU07QUFBTixjQUFNLEdBRGxCLE1BQU0sQ0FBQyxVQUFVLENBQUMsQ0FDTixNQUFNLEtBQU4sTUFBTTtlQUFOLE1BQU07Ozt3QkFBTixNQUFNIiwiZmlsZSI6ImZsaWNrci5qcyIsInNvdXJjZVJvb3QiOiIvc3JjLyJ9
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImZsaWNrci5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzBCQUlhLE1BQU07Ozs7Ozs7O2lDQUpYLE1BQU07O3NDQUNOLFVBQVU7Ozs7O0FBR0wsWUFBTTtBQUtOLGlCQUxBLE1BQU0sQ0FLTCxJQUFJLEVBQUM7OztlQUpqQixPQUFPLEdBQUcsUUFBUTtlQUNsQixNQUFNLEdBQUcsRUFBRTtlQUNYLEdBQUcsR0FBRyw2RkFBNkY7O0FBR2pHLGNBQUksQ0FBQyxJQUFJLEdBQUcsSUFBSSxDQUFDO1NBQ2xCOztzQkFQVSxNQUFNOzs7O2lCQVNULG9CQUFFOzs7QUFDUixtQkFBTyxJQUFJLENBQUMsSUFBSSxDQUFDLEtBQUssQ0FBQyxJQUFJLENBQUMsR0FBRyxDQUFDLENBQUMsSUFBSSxDQUFDLFVBQUEsUUFBUSxFQUFJO0FBQ2hELG9CQUFLLE1BQU0sR0FBRyxRQUFRLENBQUMsT0FBTyxDQUFDLEtBQUssQ0FBQzthQUN0QyxDQUFDLENBQUM7V0FDSjs7O2lCQUVZLHlCQUFFO0FBQ2IsbUJBQU8sT0FBTyxDQUFDLGlDQUFpQyxDQUFDLENBQUM7V0FDbkQ7OztBQWpCVSxjQUFNLEdBRGxCLE1BQU0sQ0FBQyxVQUFVLENBQUMsQ0FDTixNQUFNLEtBQU4sTUFBTTtlQUFOLE1BQU07Ozt3QkFBTixNQUFNIiwiZmlsZSI6ImZsaWNrci5qcyIsInNvdXJjZVJvb3QiOiIuLi9zcmMvIn0=
