@@ -1,0 +1,26 @@
+<template>
+
+    <style type="text/css">
+
+
+    </style>
+
+    <div id="wrapper">
+        <div id="scroller">
+            <ul>
+                <li virtual-scroll.for="item of objectArray" class="row">
+                    ${item.name}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="array-actions">
+        <button class="btn btn-primary" click.delegate="addItem()">Push 1</button>
+        <button class="btn btn-primary" click.delegate="addItems(20)">Push 20</button>
+        <button class="btn btn-primary" click.delegate="addItemFirst()">Unshift 1</button>
+        <button class="btn btn-primary" click.delegate="unshift5()">Unshift 5</button>
+        <button class="btn btn-primary" click.delegate="addItem2()">Add at 1</button>
+        <button class="btn btn-primary" click.delegate="removeItems(1)">Remove 1 at 0</button>
+        <button class="btn btn-primary" click.delegate="removeItems(3)">Remove top 3</button>
+    </div>
+</template>

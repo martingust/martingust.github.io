@@ -1,8 +1,8 @@
-System.register(['./compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html', './replaceable', './virtual-repeat'], function (_export) {
-  var Compose, If, With, Repeat, Show, GlobalBehavior, SanitizeHtmlValueConverter, Replaceable, VirtualRepeat;
+System.register(['./compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html', './replaceable', './virtual-repeat', './virtual-scroll'], function (_export) {
+  var Compose, If, With, Repeat, Show, GlobalBehavior, SanitizeHtmlValueConverter, Replaceable, VirtualRepeat, VirtualScroll;
 
   function configure(aurelia) {
-    aurelia.globalizeResources('./compose', './if', './with', './repeat', './show', './replaceable', './global-behavior', './sanitize-html', './virtual-repeat');
+    aurelia.globalizeResources('./compose', './if', './with', './repeat', './show', './replaceable', './global-behavior', './sanitize-html', './virtual-repeat', './virtual-scroll');
   }
 
   return {
@@ -24,6 +24,8 @@ System.register(['./compose', './if', './with', './repeat', './show', './global-
       Replaceable = _replaceable.Replaceable;
     }, function (_virtualRepeat) {
       VirtualRepeat = _virtualRepeat.VirtualRepeat;
+    }, function (_virtualScroll) {
+      VirtualScroll = _virtualScroll.VirtualScroll;
     }],
     execute: function () {
       'use strict';
@@ -47,6 +49,8 @@ System.register(['./compose', './if', './with', './repeat', './show', './global-
       _export('configure', configure);
 
       _export('VirtualRepeat', VirtualRepeat);
+
+      _export('VirtualScroll', VirtualScroll);
     }
   };
 });

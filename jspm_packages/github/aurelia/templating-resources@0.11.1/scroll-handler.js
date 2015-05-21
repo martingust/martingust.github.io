@@ -26,7 +26,7 @@ System.register([], function (_export) {
           this.amplitude = null;
           this.target = null;
           this.timeConstant = 325;
-          this.firefoxMultitude = 15;
+          this.firefoxMultitude = 30;
           this.mouseMultitude = 1;
           this.keyStep = 120;
           this.isFirefox = navigator.userAgent.indexOf('Firefox') > -1;
@@ -35,6 +35,8 @@ System.register([], function (_export) {
           this.hasKeyDown = 'onkeydown' in document;
           this.hasWheelEvent = 'onwheel' in document;
           this.hasMouseWheelEvent = 'onmousewheel' in document;
+          this.prevFrame = 0;
+          this.touchOnSameFrameCount = 0;
         }
 
         ScrollHandler.prototype.initialize = function initialize(view, listener) {
@@ -95,24 +97,10 @@ System.register([], function (_export) {
           return event.clientY;
         };
 
-        ScrollHandler.prototype.track = function track() {
-          var now, elapsed, delta, v;
-
-          now = Date.now();
-          elapsed = now - this.timestamp;
-          this.timestamp = now;
-          delta = this.offset - this.frame;
-          this.frame = this.offset;
-
-          v = 1000 * delta / (1 + elapsed);
-          this.velocity = 0.35 * v + 0.2 * this.velocity;
-        };
-
         ScrollHandler.prototype.autoScroll = function autoScroll() {
           var _this2 = this;
 
           var elapsed, delta;
-
           if (this.amplitude) {
             elapsed = Date.now() - this.timestamp;
             delta = this.amplitude * Math.exp(-elapsed / this.timeConstant);
@@ -123,6 +111,19 @@ System.register([], function (_export) {
               });
             }
           }
+        };
+
+        ScrollHandler.prototype.track = function track() {
+          var now, elapsed, delta, v;
+
+          now = Date.now();
+          elapsed = now - this.timestamp;
+          this.timestamp = now;
+          delta = this.offset - this.frame;
+          this.frame = this.offset;
+
+          v = 1000 * delta / (1 + elapsed);
+          this.velocity = 0.3 * v + 0.2 * this.velocity;
         };
 
         ScrollHandler.prototype.touchMove = function touchMove(event) {
@@ -152,7 +153,7 @@ System.register([], function (_export) {
           clearInterval(this.ticker);
           this.ticker = setInterval(function () {
             return _this3.track();
-          }, 100);
+          }, 10);
 
           event.preventDefault();
           event.stopPropagation();
@@ -166,7 +167,7 @@ System.register([], function (_export) {
 
           clearInterval(this.ticker);
           if (this.velocity > 10 || this.velocity < -10) {
-            this.amplitude = 0.1 * this.velocity;
+            this.amplitude = 0.2 * this.velocity;
             this.target = Math.round(this.offset + this.amplitude);
             this.timestamp = Date.now();
             requestAnimationFrame(function () {
@@ -190,11 +191,12 @@ System.register([], function (_export) {
 
           if (this.isFirefox && event.deltaMode == 1) {
             delta *= this.firefoxMultitude;
+            delta = -delta;
           }
 
           delta *= this.mouseMultitude;
 
-          this.offset = this.listener(delta);
+          this.offset = this.listener(delta, 0.1);
         };
 
         ScrollHandler.prototype.keyDown = function keyDown(event) {
@@ -210,6 +212,8 @@ System.register([], function (_export) {
 
           this.offset = this.listener(delta);
         };
+
+        ScrollHandler.prototype.dispose = function dispose() {};
 
         return ScrollHandler;
       })();

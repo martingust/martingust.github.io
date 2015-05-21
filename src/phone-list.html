@@ -1,9 +1,10 @@
 <template>
+
             <div class="contact-list">
                 <div>
                     <div virtual-repeat.for="item of objectArray" class="contact-list-item">
                         <div class="contact-item">
-                            <img src="${item.image}" />
+                            <div class="avatar" style="background-color: ${item.color}">${item.firstLetter}</div>
                             <div class="name">
                                 ${$index} ${item.name}
                             </div>
@@ -16,12 +17,9 @@
                 </div>
             </div>
     <div class="array-actions">
-        <button class="btn btn-primary" click.delegate="addItem()">Push 1</button>
-        <button class="btn btn-primary" click.delegate="addItems(20)">Push 20</button>
-        <button class="btn btn-primary" click.delegate="addItemFirst()">Unshift 1</button>
-        <button class="btn btn-primary" click.delegate="unshift5()">Unshift 5</button>
-        <button class="btn btn-primary" click.delegate="addItem2()">Add at 1</button>
-        <button class="btn btn-primary" click.delegate="removeItems(1)">Remove 1 at 0</button>
-        <button class="btn btn-primary" click.delegate="removeItems(3)">Remove top 3</button>
+        <button class="btn btn-primary" click.delegate="addItem()">Add 1</button>
+        <button class="btn btn-primary" click.delegate="addItems(1000)">Add 1000</button>
+        <button class="btn btn-primary" click.delegate="addItemFirst()">Add 1 at top</button>
+        <button class="btn btn-primary" click.delegate="removeItems(1)">Remove 1 at top</button>
     </div>
 </template>

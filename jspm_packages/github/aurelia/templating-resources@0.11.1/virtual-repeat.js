@@ -32,13 +32,14 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           this.observerLocator = observerLocator;
           this.scrollHandler = scrollHandler;
           this.local = 'item';
-          this.ease = 0.1;
+          this.ease = 1;
           this.targetY = 0;
           this.currentY = 0;
           this.previousY = 0;
           this.first = 0;
           this.previousFirst = 0;
           this.numberOfDomElements = 0;
+          this.indicatorMinHeight = 15;
         }
 
         var _VirtualRepeat = VirtualRepeat;
@@ -49,14 +50,23 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           this.executionContext = executionContext;
           this.virtualScrollInner = this.element.parentElement;
           this.virtualScroll = this.virtualScrollInner.parentElement;
+          this.createScrollIndicator();
           this.virtualScroll.style.overflow = 'hidden';
           this.virtualScroll.tabIndex = '999';
+          this.currentEase = this.ease;
 
           this.virtualScroll.addEventListener('touchmove', function (e) {
             e.preventDefault();
           });
 
-          this.scrollHandler.initialize(this.virtualScroll, function (deltaY) {
+          this.scrollHandler.initialize(this.virtualScroll, function (deltaY, ease) {
+            console.log('ease', ease);
+            if (ease) {
+              _this.currentEase = ease;
+            } else {
+              _this.currentEase = _this.ease;
+            }
+
             _this.targetY += deltaY;
             _this.targetY = Math.max(-_this.scrollViewHeight, _this.targetY);
             _this.targetY = Math.min(0, _this.targetY);
@@ -96,6 +106,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           }
 
           this.calcScrollViewHeight();
+          this.calcIndicatorHeight();
 
           observer = this.observerLocator.getArrayObserver(items);
 
@@ -148,10 +159,9 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
               marginTop,
               translateStyle,
               view,
-              first,
-              childNodesLength;
+              first;
 
-          this.currentY += (this.targetY - this.currentY) * this.ease;
+          this.currentY += (this.targetY - this.currentY) * this.currentEase;
           this.currentY = Math.round(this.currentY);
 
           if (this.currentY === this.previousY) {
@@ -188,6 +198,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
 
             view = viewSlot.children[numberOfDomElements - 1];
             view.executionContext[this.local] = items[first];
+            console.log('index', first);
             view.executionContext = this.updateExecutionContext(view.executionContext, first, items.length);
             viewSlot.children.unshift(viewSlot.children.splice(-1, 1)[0]);
 
@@ -204,14 +215,27 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           }
 
           translateStyle = 'translate3d(0px,' + this.currentY + 'px,0px)';
-
           this.virtualScrollInner.style.webkitTransform = translateStyle;
           this.virtualScrollInner.style.msTransform = translateStyle;
           this.virtualScrollInner.style.transform = translateStyle;
 
+          this.scrollIndicator();
+
           requestAnimationFrame(function () {
             return _this3.scroll();
           });
+        };
+
+        _VirtualRepeat.prototype.scrollIndicator = function scrollIndicator() {
+          var scrolledPercentage, indicatorTranslateStyle;
+
+          scrolledPercentage = -this.currentY / (this.items.length * this.itemHeight - this.virtualScrollHeight);
+          this.indicatorY = (this.virtualScrollHeight - this.indicatorHeight) * scrolledPercentage;
+
+          indicatorTranslateStyle = 'translate3d(0px,' + this.indicatorY + 'px,0px)';
+          this.indicator.style.webkitTransform = indicatorTranslateStyle;
+          this.indicator.style.msTransform = indicatorTranslateStyle;
+          this.indicator.style.transform = indicatorTranslateStyle;
         };
 
         _VirtualRepeat.prototype.createBaseExecutionContext = function createBaseExecutionContext(data) {
@@ -285,10 +309,39 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           }
 
           this.calcScrollViewHeight();
+          this.calcIndicatorHeight();
+          this.scrollIndicator();
         };
 
         _VirtualRepeat.prototype.calcScrollViewHeight = function calcScrollViewHeight() {
           this.scrollViewHeight = this.items.length * this.itemHeight - this.virtualScrollHeight;
+        };
+
+        _VirtualRepeat.prototype.calcIndicatorHeight = function calcIndicatorHeight() {
+          this.indicatorHeight = this.virtualScrollHeight * (this.virtualScrollHeight / this.scrollViewHeight);
+          if (this.indicatorHeight < this.indicatorMinHeight) {
+            this.indicatorHeight = this.indicatorMinHeight;
+          }
+
+          if (this.indicatorHeight >= this.scrollViewHeight) {
+            this.indicator.style.visibility = 'hidden';
+          } else {
+            this.indicator.style.visibility = '';
+          }
+
+          this.indicator.style.height = this.indicatorHeight + 'px';
+        };
+
+        _VirtualRepeat.prototype.createScrollIndicator = function createScrollIndicator() {
+          this.indicator = document.createElement('div');
+          this.virtualScroll.appendChild(this.indicator);
+          this.indicator.classList.add('au-scroll-indicator');
+          this.indicator.style.backgroundColor = '#cccccc';
+          this.indicator.style.top = '0px';
+          this.indicator.style.right = '5px';
+          this.indicator.style.width = '4px';
+          this.indicator.style.position = 'absolute';
+          this.indicator.style.opacity = '0.6';
         };
 
         _VirtualRepeat.getStyleValue = function getStyleValue(element, style) {

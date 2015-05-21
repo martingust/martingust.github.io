@@ -1,6 +1,7 @@
 body {
   margin: 0;
   background-color: #222526 !important;
+  color: #fff;
 }
 
 .splash {
@@ -74,7 +75,7 @@ section {
 }
 
 .contact-list-item .contact-item {
-  height: 121px;
+  height: 85px;
   border-bottom: 1px solid #808080;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -110,3 +111,13 @@ section {
   text-transform: uppercase;
 }
 
+.avatar {
+  width: 65px;
+  height: 65px;
+  float:left;
+  margin-right: 10px;
+  font-size: 25px;
+  color: #fff;
+  text-align: center;
+  line-height: 65px;
+}
