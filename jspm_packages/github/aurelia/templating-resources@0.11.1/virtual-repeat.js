@@ -60,7 +60,6 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           });
 
           this.scrollHandler.initialize(this.virtualScroll, function (deltaY, ease) {
-            console.log('ease', ease);
             if (ease) {
               _this.currentEase = ease;
             } else {
@@ -198,7 +197,6 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
 
             view = viewSlot.children[numberOfDomElements - 1];
             view.executionContext[this.local] = items[first];
-            console.log('index', first);
             view.executionContext = this.updateExecutionContext(view.executionContext, first, items.length);
             viewSlot.children.unshift(viewSlot.children.splice(-1, 1)[0]);
 
